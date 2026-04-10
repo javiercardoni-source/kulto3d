@@ -7,6 +7,7 @@ import { LineFilter } from "@/components/catalog/LineFilter";
 import { SearchBar } from "@/components/catalog/SearchBar";
 import { EmptyState } from "@/components/catalog/EmptyState";
 import { normalizeText } from "@/lib/format";
+import { trackSelectLine } from "@/lib/analytics";
 import type { Product, ProductLine } from "@/types";
 
 const VALID_LINES: ProductLine[] = [
@@ -48,7 +49,10 @@ export function ProductListClient({ products }: ProductListClientProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [line]);
 
-  const setLine = (value: ProductLine | "all") => setLineState(value);
+  const setLine = (value: ProductLine | "all") => {
+    setLineState(value);
+    if (value !== "all") trackSelectLine(value);
+  };
 
   const counts = useMemo(() => {
     const acc: Record<string, number> = {

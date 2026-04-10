@@ -7,6 +7,7 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatARS } from "@/lib/format";
 import { getShippingQuote, PROVINCE_NAMES } from "@/lib/shipping";
+import { trackBeginCheckout, trackPurchase } from "@/lib/analytics";
 import type { PaymentMethod } from "@/types";
 
 interface FormState {
@@ -72,6 +73,14 @@ export function CheckoutClient() {
       router.replace("/cart");
     }
   }, [hydrated, items.length, router]);
+
+  // Track begin_checkout once when entering the page with items
+  useEffect(() => {
+    if (hydrated && items.length > 0) {
+      trackBeginCheckout(items, subtotal);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated]);
 
   const shipping = useMemo(
     () => (form.province ? getShippingQuote(form.province) : null),
@@ -149,6 +158,9 @@ export function CheckoutClient() {
       if (!response.ok) {
         throw new Error(data.error ?? "Error al procesar el pedido");
       }
+
+      // Track the purchase BEFORE clearing the cart (we need the items)
+      trackPurchase(data.code, total, shipping?.price ?? 0, items);
 
       clear();
       router.push(`/checkout/success?code=${data.code}`);

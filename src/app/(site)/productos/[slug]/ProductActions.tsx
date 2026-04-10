@@ -1,11 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Check, Minus, Plus } from "lucide-react";
 import { InstagramIcon } from "@/components/brand/icons";
 import { useCart } from "@/context/CartContext";
 import { whatsappLink, SITE } from "@/lib/site";
+import {
+  trackAddToCart,
+  trackInstagram,
+  trackViewItem,
+  trackWhatsApp,
+} from "@/lib/analytics";
 import type { Product } from "@/types";
 
 interface ProductActionsProps {
@@ -38,6 +44,12 @@ export function ProductActions({
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
 
+  // Track view_item once when this client component mounts
+  useEffect(() => {
+    trackViewItem(product);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
+
   const message = `¡Hola Kulto3D! Me interesa *${product.name}*${
     consultOnly ? " (consulta por pieza a medida)" : ""
   }. ${SITE.url}/productos/${product.slug}`;
@@ -47,12 +59,14 @@ export function ProductActions({
 
   const handleAdd = () => {
     add(product, qty);
+    trackAddToCart(product, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 1500);
   };
 
   const handleBuyNow = () => {
     add(product, qty);
+    trackAddToCart(product, qty);
     router.push("/cart");
   };
 
@@ -139,6 +153,11 @@ export function ProductActions({
         href={hasWhatsApp ? waHref : SITE.instagram.url}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() =>
+          hasWhatsApp
+            ? trackWhatsApp("product_detail", product.slug)
+            : trackInstagram("product_detail")
+        }
         className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#25d366] px-6 py-3.5 text-sm font-semibold text-white transition-all hover:scale-[1.02]"
       >
         <WhatsAppIcon className="h-4 w-4" />
@@ -154,6 +173,7 @@ export function ProductActions({
           href={SITE.instagram.url}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackInstagram("product_detail_secondary")}
           className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-white transition-colors hover:border-[color:var(--brand)]"
         >
           <InstagramIcon className="h-4 w-4" />

@@ -2,6 +2,7 @@ import Script from "next/script";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/context/CartContext";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 export default function SiteLayout({
   children,
@@ -24,6 +25,9 @@ export default function SiteLayout({
         data-greeting="¡Hola! Soy el agente de Kulto3D. Contame qué estás buscando y te ayudo."
         strategy="lazyOnload"
       />
+
+      {/* Google Analytics 4 */}
+      <GoogleAnalytics />
     </CartProvider>
   );
 }
