@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#18181b"/>
+      <stop offset="1" stop-color="#0c1714"/>
+    </linearGradient>
+    <linearGradient id="shape" x1="100" y1="100" x2="300" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#10b981" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#10b981" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <g transform="translate(200 200)">
+    <path d="M 0 -80 L 69 -40 L 69 40 L 0 80 L -69 40 L -69 -40 Z"
+      fill="url(#shape)" stroke="#10b981" stroke-width="1.5" stroke-opacity="0.6"/>
+    <path d="M 0 -80 L 0 0 L 69 -40" stroke="#10b981" stroke-width="1" stroke-opacity="0.4" fill="none"/>
+    <path d="M 0 0 L 0 80 M 0 0 L -69 -40" stroke="#10b981" stroke-width="1" stroke-opacity="0.3" fill="none"/>
+  </g>
+  <text x="200" y="340" text-anchor="middle" fill="#71717a" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" letter-spacing="2">
+    KULTO3D · PRÓXIMAMENTE
+  </text>
+</svg>
