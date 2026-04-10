@@ -21,3 +21,8 @@ export type {
   OrderItemSnapshot,
   PaymentMethod,
 } from "./order";
+
+export type {
+  CartItem,
+  CartState,
+} from "./cart";

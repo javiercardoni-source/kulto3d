@@ -1,7 +1,10 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ShoppingCart, Check, Minus, Plus } from "lucide-react";
 import { InstagramIcon } from "@/components/brand/icons";
+import { useCart } from "@/context/CartContext";
 import { whatsappLink, SITE } from "@/lib/site";
 import type { Product } from "@/types";
 
@@ -30,6 +33,11 @@ export function ProductActions({
   soldOut,
   consultOnly,
 }: ProductActionsProps) {
+  const router = useRouter();
+  const { add } = useCart();
+  const [qty, setQty] = useState(1);
+  const [added, setAdded] = useState(false);
+
   const message = `¡Hola Kulto3D! Me interesa *${product.name}*${
     consultOnly ? " (consulta por pieza a medida)" : ""
   }. ${SITE.url}/productos/${product.slug}`;
@@ -37,22 +45,96 @@ export function ProductActions({
   const waHref = whatsappLink(message);
   const hasWhatsApp = SITE.whatsapp.number.length > 0;
 
+  const handleAdd = () => {
+    add(product, qty);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
+
+  const handleBuyNow = () => {
+    add(product, qty);
+    router.push("/cart");
+  };
+
+  const canBuy = !consultOnly && !soldOut;
+
   return (
-    <div className="flex flex-col gap-3">
-      {/* Primary: Add to cart (disabled until F4) */}
-      {!consultOnly && (
-        <button
-          type="button"
-          disabled
-          title="Carrito disponible próximamente"
-          className="group inline-flex items-center justify-center gap-2 rounded-full bg-white/10 px-6 py-3.5 text-sm font-semibold text-zinc-500 opacity-60 cursor-not-allowed"
-        >
-          <ShoppingCart className="h-4 w-4" />
-          {soldOut ? "Sin stock por ahora" : "Agregar al carrito (pronto)"}
-        </button>
+    <div className="flex flex-col gap-4">
+      {canBuy && (
+        <>
+          {/* Quantity selector */}
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+              Cantidad
+            </span>
+            <div className="flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1">
+              <button
+                type="button"
+                onClick={() => setQty((q) => Math.max(1, q - 1))}
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"
+                aria-label="Disminuir cantidad"
+              >
+                <Minus className="h-3.5 w-3.5" />
+              </button>
+              <span className="w-8 text-center text-sm font-semibold tabular-nums">
+                {qty}
+              </span>
+              <button
+                type="button"
+                onClick={() =>
+                  setQty((q) => Math.min(product.stock || 99, q + 1))
+                }
+                className="flex h-8 w-8 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"
+                aria-label="Aumentar cantidad"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            {product.stock > 0 && (
+              <span className="text-xs text-zinc-500">
+                {product.stock} disponibles
+              </span>
+            )}
+          </div>
+
+          {/* Add to cart */}
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <button
+              type="button"
+              onClick={handleAdd}
+              className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3.5 text-sm font-semibold text-white transition-all hover:border-[color:var(--brand)] hover:bg-white/10"
+            >
+              {added ? (
+                <>
+                  <Check className="h-4 w-4 text-[color:var(--brand)]" />
+                  Agregado al carrito
+                </>
+              ) : (
+                <>
+                  <ShoppingCart className="h-4 w-4" />
+                  Agregar al carrito
+                </>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={handleBuyNow}
+              className="group inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[color:var(--brand)] px-6 py-3.5 text-sm font-semibold text-black transition-all hover:scale-[1.02]"
+            >
+              Comprar ahora
+            </button>
+          </div>
+        </>
       )}
 
-      {/* WhatsApp CTA (primary when sold out or consult-only) */}
+      {soldOut && (
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-center text-sm text-zinc-400">
+          Sin stock por ahora. Coordiná por WhatsApp si querés que lo
+          imprimamos para vos.
+        </div>
+      )}
+
+      {/* WhatsApp CTA */}
       <a
         href={hasWhatsApp ? waHref : SITE.instagram.url}
         target="_blank"
@@ -63,7 +145,7 @@ export function ProductActions({
         {hasWhatsApp
           ? consultOnly
             ? "Pedir cotización por WhatsApp"
-            : "Coordinar por WhatsApp"
+            : "Consultar por WhatsApp"
           : "Escribinos por Instagram"}
       </a>
 

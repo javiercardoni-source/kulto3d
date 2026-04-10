@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Container } from "./Container";
+import { CartIcon } from "./CartIcon";
 import { Logo } from "@/components/brand/Logo";
 import { InstagramIcon } from "@/components/brand/icons";
 import { SITE } from "@/lib/site";
@@ -64,6 +65,7 @@ export function Navbar() {
             <InstagramIcon className="h-3.5 w-3.5" />
             @{SITE.instagram.handle}
           </Link>
+          <CartIcon />
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
