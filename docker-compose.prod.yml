@@ -1,0 +1,42 @@
+services:
+  kulto3d-web:
+    build:
+      context: .
+    container_name: kulto3d-web
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 384m
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://0.0.0.0:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - easypanel
+    labels:
+      - "traefik.enable=true"
+      # HTTPS router (www)
+      - "traefik.http.routers.kulto3d.rule=Host(`www.kulto3d.com`)"
+      - "traefik.http.routers.kulto3d.entrypoints=https"
+      - "traefik.http.routers.kulto3d.tls.certresolver=letsencrypt"
+      - "traefik.http.services.kulto3d.loadbalancer.server.port=3000"
+      # HTTP -> HTTPS (www)
+      - "traefik.http.routers.kulto3d-http.rule=Host(`www.kulto3d.com`)"
+      - "traefik.http.routers.kulto3d-http.entrypoints=http"
+      - "traefik.http.routers.kulto3d-http.middlewares=redirect-to-https@file"
+      # Bare domain -> www (HTTPS)
+      - "traefik.http.routers.kulto3d-bare.rule=Host(`kulto3d.com`)"
+      - "traefik.http.routers.kulto3d-bare.entrypoints=https"
+      - "traefik.http.routers.kulto3d-bare.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.kulto3d-bare.middlewares=redirect-to-www@file"
+      # Bare domain HTTP -> HTTPS
+      - "traefik.http.routers.kulto3d-bare-http.rule=Host(`kulto3d.com`)"
+      - "traefik.http.routers.kulto3d-bare-http.entrypoints=http"
+      - "traefik.http.routers.kulto3d-bare-http.middlewares=redirect-to-https@file"
+
+networks:
+  easypanel:
+    external: true
