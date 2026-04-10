@@ -18,24 +18,19 @@ services:
       - easypanel
     labels:
       - "traefik.enable=true"
-      # HTTPS router (www)
-      - "traefik.http.routers.kulto3d.rule=Host(`www.kulto3d.com`)"
+      # HTTPS router (both apex and www)
+      - "traefik.http.routers.kulto3d.rule=Host(`kulto3d.com`) || Host(`www.kulto3d.com`)"
       - "traefik.http.routers.kulto3d.entrypoints=https"
       - "traefik.http.routers.kulto3d.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.kulto3d.tls.domains[0].main=kulto3d.com"
+      - "traefik.http.routers.kulto3d.tls.domains[0].sans=www.kulto3d.com"
       - "traefik.http.services.kulto3d.loadbalancer.server.port=3000"
-      # HTTP -> HTTPS (www)
-      - "traefik.http.routers.kulto3d-http.rule=Host(`www.kulto3d.com`)"
+      # HTTP -> HTTPS redirect (both apex and www)
+      - "traefik.http.routers.kulto3d-http.rule=Host(`kulto3d.com`) || Host(`www.kulto3d.com`)"
       - "traefik.http.routers.kulto3d-http.entrypoints=http"
-      - "traefik.http.routers.kulto3d-http.middlewares=redirect-to-https@file"
-      # Bare domain -> www (HTTPS)
-      - "traefik.http.routers.kulto3d-bare.rule=Host(`kulto3d.com`)"
-      - "traefik.http.routers.kulto3d-bare.entrypoints=https"
-      - "traefik.http.routers.kulto3d-bare.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.kulto3d-bare.middlewares=redirect-to-www@file"
-      # Bare domain HTTP -> HTTPS
-      - "traefik.http.routers.kulto3d-bare-http.rule=Host(`kulto3d.com`)"
-      - "traefik.http.routers.kulto3d-bare-http.entrypoints=http"
-      - "traefik.http.routers.kulto3d-bare-http.middlewares=redirect-to-https@file"
+      - "traefik.http.routers.kulto3d-http.middlewares=kulto3d-https-redirect"
+      - "traefik.http.middlewares.kulto3d-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.kulto3d-https-redirect.redirectscheme.permanent=true"
 
 networks:
   easypanel:
