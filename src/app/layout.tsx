@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { SITE } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,9 +16,40 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Kulto3D — Impresiones 3D, macetas y plantas únicas",
-  description:
-    "Marketplace de productos de impresión 3D: macetas, plantas y piezas únicas diseñadas para los que aman la naturaleza con otros ojos.",
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: `${SITE.name} — Estudio de diseño + fabricación 3D`,
+    template: `%s · ${SITE.name}`,
+  },
+  description: SITE.description,
+  keywords: [
+    "impresión 3D",
+    "diseño 3D",
+    "macetas 3D",
+    "lámparas 3D",
+    "cartelería 3D",
+    "figuras 3D",
+    "Argentina",
+    "Kulto3D",
+  ],
+  authors: [{ name: "Kulto3D" }],
+  creator: "Kulto3D",
+  openGraph: {
+    type: "website",
+    locale: "es_AR",
+    url: SITE.url,
+    siteName: SITE.name,
+    title: `${SITE.name} — Estudio de diseño + fabricación 3D`,
+    description: SITE.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE.name} — Estudio de diseño + fabricación 3D`,
+    description: SITE.description,
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -26,9 +60,13 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col bg-zinc-950 text-white">
+        <Navbar />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }

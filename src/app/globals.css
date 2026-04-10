@@ -10,6 +10,12 @@
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-line-deco: var(--line-deco);
+  --color-line-branding: var(--line-branding);
+  --color-line-construction: var(--line-construction);
+  --color-line-collectibles: var(--line-collectibles);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,6 +55,14 @@
 }
 
 :root {
+  /* Kulto3D brand palette */
+  --brand: oklch(0.72 0.17 155);          /* emerald ancla */
+  --brand-foreground: oklch(0.145 0 0);
+  --line-deco: oklch(0.72 0.17 155);       /* 🌿 emerald */
+  --line-branding: oklch(0.64 0.25 310);   /* 🎨 violet/fuchsia */
+  --line-construction: oklch(0.60 0.04 240); /* 🏗️ steel */
+  --line-collectibles: oklch(0.75 0.17 60); /* 🧠 amber */
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
