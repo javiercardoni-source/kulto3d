@@ -1,20 +1,23 @@
-import { getServerClient } from "@/lib/supabase/server";
+import { getAnonClient } from "@/lib/supabase/anon";
 import { mapCategoryFromDB, mapProductFromDB } from "@/lib/mappers";
 import { PRODUCTS } from "@/data/products";
 import { CATEGORIES } from "@/data/categories";
 import type { Category, Product, ProductLine } from "@/types";
 
 /**
- * Data layer con fallback automático.
+ * Data layer con fallback automático para lecturas públicas.
  *
- * - Si Supabase está configurado → queries a la DB
+ * - Si Supabase está configurado → queries a la DB (sin cookies, safe en build-time)
  * - Si no → devuelve el seed estático de `/data/*.ts`
  *
- * Todas las funciones son `async` para permitir migración transparente.
+ * Usamos el cliente anon (sin cookies) porque estas funciones son
+ * server-side y se llaman también desde `generateStaticParams`.
+ * Para queries que requieran sesión de usuario, usar directamente
+ * `getServerClient()` en el route handler correspondiente.
  */
 
 async function supabase() {
-  return await getServerClient();
+  return getAnonClient();
 }
 
 // -------------------- PRODUCTS --------------------

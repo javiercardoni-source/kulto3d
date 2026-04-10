@@ -2,8 +2,16 @@ services:
   kulto3d-web:
     build:
       context: .
+      args:
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+        - NEXT_PUBLIC_WHATSAPP_NUMBER=${NEXT_PUBLIC_WHATSAPP_NUMBER}
+        - NEXT_PUBLIC_INSTAGRAM_HANDLE=${NEXT_PUBLIC_INSTAGRAM_HANDLE}
+        - NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY=${NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY}
     container_name: kulto3d-web
     restart: unless-stopped
+    env_file: .env
     deploy:
       resources:
         limits:

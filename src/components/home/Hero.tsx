@@ -33,10 +33,10 @@ export function Hero() {
 
         <div className="mt-12 flex flex-wrap items-center gap-4">
           <Link
-            href="#lineas"
+            href="/productos"
             className="group inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition-all hover:bg-zinc-200"
           >
-            Ver lo que hacemos
+            Ver el catálogo
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
           <Link

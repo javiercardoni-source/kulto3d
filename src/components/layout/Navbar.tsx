@@ -16,9 +16,9 @@ type NavLink = {
 };
 
 const NAV_LINKS: NavLink[] = [
+  { href: "/productos", label: "Catálogo" },
   { href: "/#lineas", label: "Líneas" },
   { href: "/#nosotros", label: "Nosotros" },
-  { href: "/productos", label: "Catálogo", soon: true },
 ];
 
 export function Navbar() {

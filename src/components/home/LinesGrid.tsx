@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { LINES } from "@/lib/brand";
@@ -22,8 +23,9 @@ export function LinesGrid() {
 
         <div className="grid gap-4 md:grid-cols-2">
           {LINES.map((line) => (
-            <article
+            <Link
               key={line.id}
+              href={`/productos?line=${line.id}`}
               id={`linea-${line.id}`}
               className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.02] p-8 transition-all hover:border-white/20 hover:bg-white/[0.04] md:p-10"
             >
@@ -62,7 +64,7 @@ export function LinesGrid() {
                   {line.description}
                 </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </Container>
